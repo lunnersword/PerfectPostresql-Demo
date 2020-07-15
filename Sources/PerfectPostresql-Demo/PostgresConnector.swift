@@ -45,7 +45,6 @@ public struct PostgresConnector {
             let date = result.getFieldString(tupleIndex: x, fieldIndex: 4) ?? ""
             print("\(city)      |   \(temp_lo)      |   \(temp_hi)      |   \(prcp)     |   \(date) ")
         }
-        
     }
     
     func select1() {
@@ -91,7 +90,7 @@ public struct PostgresConnector {
     }
     
     func join1() {
-        let stmt = "SELECT * FROM weather, citys WHERE city = name;"
+        let stmt = "SELECT * FROM weather, cities WHERE city = name;"
         let server = connect()
         let result = server.exec(statement: stmt)
         let num = result.numTuples()
@@ -114,7 +113,7 @@ public struct PostgresConnector {
 //    WHERE row_condition
 
     func leftOuterJoin() {
-        let stmt = "SELECT * FROM weather LEFT OUTER JOIN citys ON (weather.city = citys.name);"
+        let stmt = "SELECT * FROM weather LEFT OUTER JOIN cities ON (weather.city = cities.name);"
         let server = connect()
         let result = server.exec(statement: stmt)
         let num = result.numTuples()
@@ -138,7 +137,7 @@ public struct PostgresConnector {
 //  WHERE row_condition
 
     func rightOuterJoin() {
-        let stmt = "SELECT * FROM weather RIGHT OUTER JOIN citys ON (weather.city = citys.name);"
+        let stmt = "SELECT * FROM weather RIGHT OUTER JOIN cities ON (weather.city = cities.name);"
         let server = connect()
         let result = server.exec(statement: stmt)
         let num = result.numTuples()
@@ -176,7 +175,7 @@ public struct PostgresConnector {
 //    FROM table_A
 //    RIGHT JOIN table_B ON join_condition
     func fullOuterJoin() {
-        let stmt = "SELECT * FROM weather FULL OUTER JOIN citys ON (weather.city = citys.name);"
+        let stmt = "SELECT * FROM weather FULL OUTER JOIN cities ON (weather.city = cities.name);"
         let server = connect()
         let result = server.exec(statement: stmt)
         let num = result.numTuples()
@@ -330,14 +329,21 @@ public struct PostgresConnector {
             let _ = server.exec(statement: stmt)
             selectFromWeather()
         }
+        do {
+            let stmt = "DELETE FROM cities"
+            let server = connect()
+            let _ = server.exec(statement: stmt)
+            selectFromWeather()
+        }
+
     }
     func createCity() {
-        let stmt = "CREATE TABLE \"citys\" (\"name\" varchar(80), \"location\" point);"
+        let stmt = "CREATE TABLE \"cities\" (\"name\" varchar(80), \"location\" point);"
         exec(stmt, params: [])
     }
     
     func insertIntoCity(name: String, location: String) {
-        let stmt = "INSERT INTO \"citys\" VALUES($1, $2)"
+        let stmt = "INSERT INTO \"cities\" VALUES($1, $2)"
         exec(stmt, params: [name, location])
     }
 
